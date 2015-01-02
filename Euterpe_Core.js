@@ -896,6 +896,94 @@ function Euterpe_Core_Obj(HTML_Tag){
 		}
 		return undefined;
 	}	
+	this.ClearEventMgr=function(EventType){
+		var EL=this.EventList;
+		for(var a=0;a<EL.length;a++){
+			if(EL[a].Event==EventType)
+				EL.splice(a,1);
+		}	
+	}
+	this.ClearCustomEventMgr=function(EventType){
+		this.ClearEventMgr(EventType);
+	}
+	this.RemoveEventMgr=function(EventType, Function){
+		var EL=this.EventList;
+		for(var a=0;a<EL.length;a++){
+			if(EL[a].Event==EventType){
+				if(EL[a].Func==Function){
+					EL.splice(a,1);
+					return;
+				}
+			}
+		}	
+	}
+	this.RemoveCustomEventMgr=function(EventType, Function){
+		this.RemoveEventMgr(EventType,Function);
+	}	
+	this.AddFunctionListener=function(Element, EventType){
+		if(Element.addEventListener)
+			Element.addEventListener(EventType,this.EventMgr,true);
+		else
+			Element.attachEvent("on"+EventType,this.EventMgr);
+	}
+	this.AddEventMgr=function(EventType, Function){
+		var U=this.GetAttribute("data-Euterpe_UID");
+		var Data=new Event_Mgr(EventType,Function,U);
+		var EL=this.EventList;
+		EL.push(Data);
+		this.AddFunctionListener(this.Element,EventType);
+		if(this.TextElement!=null && this.TextElement!=undefined)
+		{
+			if(this.Browser!="MSIE")
+				this.AddFunctionListener(this.TextElement,EventType);
+		}	
+	}
+	this.AddCustomEventMgr=function(EventType, Function){
+		var EL=this.EventList;
+		var U=this.GetAttribute("data-Euterpe_UID");
+		var Data=new Event_Mgr(EventType,Function,U);
+		EL.push(Data);
+		if(this.TextElement!=null && this.TextElement!=undefined)
+		{
+			if(this.TextElement.nodeType==1)
+			{
+				U=this.TextElement.getAttribute("data-Euterpe_UID");
+				var Data2=new Event_Mgr(EventType,Function,U);
+				EL.push(Data2);
+			}
+		}	
+	}	
+	this.SetEventMgr=function(EventType, Function){
+		this.ClearEventMgr(EventType);
+		this.AddEventMgr(EventType,Function);
+	}	
+	this.SetCustomEventMgr=function(EventType, Function){
+		this.SetEventMgr(EventType,Function);
+	}		
+	this.EventMgr=function(E){
+		var Obj=GetEuterpeObjFromMsg(E);
+		if(Obj){
+			var A=Obj.Element.getAttribute("data-Euterpe_Type");
+			//Euterpe_Log("Evento: "+E.type+" - "+E.eventPhase+" - "+A);		
+			var EL=Obj.EventList;
+			for(var a=0;a<EL.length;a++){
+				if(E.type){
+					if(E.type.indexOf("Euterpe")!=-1){
+						if(E.type==EL[a].Event){
+							var O=EL[a].Func(E);
+							if(O)
+								return O;
+						}
+					}
+					else
+					{
+						if(E.type==EL[a].Event)
+							EL[a].Func(E);
+					}
+				}
+			}
+		}	
+	}	
 	this.Place=function(Width,Height,Left,Top){
 		if(Width!="")this.SetWidth(Width);
 		if(Height!="")this.SetHeight(Height);
@@ -1180,7 +1268,7 @@ function Euterpe_Core_Obj(HTML_Tag){
 	}	
 }
 //-----------------------------------------------------------------
-if(Euterpe_Core_Event_Obj_Var==undefined){
+/*if(Euterpe_Core_Event_Obj_Var==undefined){
 	var Euterpe_Core_Event_Obj_Var=1;
 	function Euterpe_Core_Event_Obj(HTML_Tag){
 		this.ClearEventMgr=function(EventType){
@@ -1274,7 +1362,7 @@ if(Euterpe_Core_Event_Obj_Var==undefined){
 	}
 	Euterpe_Core_Event_Obj.prototype=new Euterpe_Core_Obj;
 	Euterpe_Core_Event_Obj.prototype.constructor=Euterpe_Core_Event_Obj;
-}
+}*/
 //-----------------------------------------------------------------
 if(Euterpe_Page_Obj==undefined){
 	var Euterpe_Page_Obj=1;
@@ -1407,7 +1495,7 @@ if(Euterpe_Page_Obj==undefined){
 		}
 		this.Setup(Page_ID);		
 	}
-	Euterpe_Page.prototype=new Euterpe_Core_Event_Obj;
+	Euterpe_Page.prototype=new Euterpe_Core_Obj;
 	Euterpe_Page.prototype.constructor=Euterpe_Page;
 }
 //-----------------------------------------------------------------

@@ -294,11 +294,11 @@ function ScreenCoordinatesToObj(Obj,x,y){
 	return Out;
 }
 //-----------------------------------------------------------------
-/****************************************************************** 
- * 	Description:
+/******************************************************************
+ *	GetWindowHeight() 
+ * 	Description: return the height of the browser window
  * 	Parameters:
- * 	+Param1:
- * 	Returned value:
+ * 	Returned value: window height in pixel (as integer)
  * 	Note:
  *****************************************************************/
 function GetWindowHeight(){
@@ -315,11 +315,11 @@ function GetWindowHeight(){
 		};
 	}
 }
-/****************************************************************** 
- * 	Description:
+/******************************************************************
+ *	GetWindowWidth() 
+ * 	Description: return width of browser windows
  * 	Parameters:
- * 	+Param1:
- * 	Returned value:
+ * 	Returned value: width of window in pixel (as integer)
  * 	Note:
  *****************************************************************/
 function GetWindowWidth(){
@@ -337,11 +337,11 @@ function GetWindowWidth(){
 	}	
 }
 //-----------------------------------------------------------------
-/****************************************************************** 
- * 	Description:
+/******************************************************************
+ *	GetScrollX() 
+ * 	Description: return window horizontal scroll 
  * 	Parameters:
- * 	+Param1:
- * 	Returned value:
+ * 	Returned value: horizontal scroll in pixel (as integer)
  * 	Note:
  *****************************************************************/
 function GetScrollX(){
@@ -350,11 +350,11 @@ function GetScrollX(){
 	else
 		return document.documentElement.scrollLeft;
 }
-/****************************************************************** 
- * 	Description:
+/******************************************************************
+ *	GetScrollY() 
+ * 	Description: return vertical scroll of the browser
  * 	Parameters:
- * 	+Param1:
- * 	Returned value:
+ * 	Returned value: vertical scroll in pixel (as integer)
  * 	Note:
  *****************************************************************/
 function GetScrollY(){
@@ -365,10 +365,10 @@ function GetScrollY(){
 }
 //-----------------------------------------------------------------
 /****************************************************************** 
- * 	Description:
+ *	GetDocumentWidth()
+ * 	Description: return width of the document (page)
  * 	Parameters:
- * 	+Param1:
- * 	Returned value:
+ * 	Returned value: width of document (as integer)
  * 	Note:
  *****************************************************************/
 function GetDocumentWidth()
@@ -379,10 +379,10 @@ function GetDocumentWidth()
 		return 0;
 }
 /****************************************************************** 
- * 	Description:
+ *	GetDocumentHeight()
+ * 	Description: return height of the document (page)
  * 	Parameters:
- * 	+Param1:
- * 	Returned value:
+ * 	Returned value: height of document in pixel as integer
  * 	Note:
  *****************************************************************/
 function GetDocumentHeight()
@@ -392,12 +392,22 @@ function GetDocumentHeight()
 	return 0;
 }
 //-----------------------------------------------------------------
-/****************************************************************** 
- * 	Description:
+/******************************************************************
+ *	Event_Mgr(Event_Str,Func,UID_Owner) 
+ * 	Description: creates a new Event_Mgr object. This object is used by
+ * 		Euterpe elements to process event 
  * 	Parameters:
- * 	+Param1:
- * 	Returned value:
- * 	Note:
+ * 	+Event_Str: string with element to manage. Both system event ("onload",
+ * 			"onmouseover",....) and user event are accepted
+ * 	+Func: function called when event Event_Str happens
+ * 	+UID_Owner: UID (Euterpe Unique ID) of the Euterpe element that process
+ * 			event
+ * 	Returned value: the Event_Mgr object created
+ * 	Note: Event_Mgr is composed as follow
+ * 		Event_Mgr.Event ->	the event
+ * 		Event_Mgr.Func	->	function called
+ * 		Event_Mgr.UID_Mgr	->	UID of the event processor
+ * 		Event_Mgr.LastEvent	->	integer not used	
  *****************************************************************/
 function Event_Mgr(Event_Str,Func,UID_Owner){
 	if(Event_Str!=undefined)
@@ -415,8 +425,9 @@ function Event_Mgr(Event_Str,Func,UID_Owner){
 	this.LastEvent=0;
 }
 //-----------------------------------------------------------------
-/****************************************************************** 
- * 	Description:
+/******************************************************************
+ *	Timeout_Mgr(Handle,UID,Sender) 
+ * 	Description: OBSOLETE????
  * 	Parameters:
  * 	+Param1:
  * 	Returned value:
@@ -438,9 +449,10 @@ function Timeout_Mgr(Handle,UID,Sender){
 }
 //-----------------------------------------------------------------
 /****************************************************************** 
- * 	Description:
+ *	Euterpe_Log(StringToLog)
+ * 	Description: create a log to browser console (if available)
  * 	Parameters:
- * 	+Param1:
+ * 	+StringToLog: string to send to console
  * 	Returned value:
  * 	Note:
  *****************************************************************/
@@ -450,10 +462,10 @@ function Euterpe_Log(StringToLog){
 }
 //-----------------------------------------------------------------
 /****************************************************************** 
- * 	Description:
+ *	GetEuterpePage()
+ * 	Description: return the Euterpe_Page element
  * 	Parameters:
- * 	+Param1:
- * 	Returned value:
+ * 	Returned value: the Euterpe_Page element
  * 	Note:
  *****************************************************************/
 function GetEuterpePage(){
@@ -471,10 +483,12 @@ function GetEuterpePage(){
 }
 //-----------------------------------------------------------------
 /****************************************************************** 
- * 	Description:
+ *	GetElementouterHTML(Element)
+ * 	Description: return complete HTML element that compose an Euterpe 
+ * 		object
  * 	Parameters:
- * 	+Param1:
- * 	Returned value:
+ * 	+Element: the javascript element you want to obtain
+ * 	Returned value: the complete HTML as string
  * 	Note:
  *****************************************************************/
 function GetElementouterHTML(Element){

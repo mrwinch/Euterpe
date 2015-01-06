@@ -1,4 +1,11 @@
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 if(Euterpe_Sys==undefined){
 	var Euterpe_Sys=1;
 	var EventMgrArray=new Array();
@@ -32,10 +39,41 @@ if(String.substr==undefined)
   }(String.prototype.substr);
 }
 //-----------------------------------------------------------------
+/******************************************************************
+ * 	PixelTxtToNumber(Value)
+ * 	Description: convert a string containing a value (for example 
+ * 		"18px") in an integer value
+ * 	Parameters:
+ * 	+ Value: a string that contains value to convert
+ * 	Return value: an integer that rappresent the value
+ * 	Note: function can convert value in pixel (for example "18" or
+ * 		"18px" are both converted in 18) but not in percentage ("18%"
+ * 		cannot be converted)
+ *****************************************************************/
 function PixelTxtToNumber(Value){
 	return parseInt(Value);
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	ParsePageParam(Src)
+ * 	Description: split a link to page (with some parameters) in its
+ * 		components
+ * 	Parameters:
+ * 	+Src: string that rappresent the link to split
+ * 	Returned value: a bidimensional associative array composed by a
+ * 		"Param" element and a "Value" element
+ * 	Note: suppose you want to split this link
+ * 		https://www.google.it/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=autodesk%20sketchbook
+ * 	the function will return an array as follow
+ * 	Return[0][Param]=sourceid
+ * 	Return[0][Value]=chrome-instant
+ * 	Return[1][Param]=ion
+ * 	Return[1][Value]=1
+ * 	Return[2][Param]=espv
+ * 	Return[2][Value]=2
+ * 	Return[3][Param]=ie
+ * 	Return[3][Value]=UTF-8#q=autodesk%20sketchbook
+ *****************************************************************/
 function ParsePageParam(Src){
 	var Out=new Array();
 	var Tmp=Src.indexOf("?")+1;
@@ -57,6 +95,15 @@ function ParsePageParam(Src){
 	return Out;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ *	Euterpe_GetCookie(CookieName)
+ * 	Description: search the value of the cookie called "CookieName"
+ * 	Parameters:
+ * 	+CookieName: the name of the cookie you want to obtain
+ * 	Returned value: the value of the cookie (as string) or undefined 
+ * 		if the cookie doesn't exist
+ * 	Note:
+ *****************************************************************/
 function Euterpe_GetCookie(CookieName){
 	var Txt=document.cookie;
 	if(Txt){
@@ -74,6 +121,22 @@ function Euterpe_GetCookie(CookieName){
 	return undefined;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ *	Euterpe_SetCookie(CookieName,CookieValue,Life,LifeType)
+ * 	Description: the function set a cookie
+ * 	Parameters:
+ * 	+CookieName: name of the cookie you want to set
+ * 	+CookieValue: value of the cookie
+ * 	+Life: how long does the cookie should exist
+ * 	+Lifetype: says how parameter Life will work
+ * 		Lifetype = "day" -> Life means days of life of the cookie
+ * 		Lifetype = "hour" -> Life means hours of life of the cookie
+ * 		Lifetype = "minute" -> Life means minutes of life of the cookie
+ * 		Lifetype = "second" -> Life means seconds of life ot the cookie
+ * 		Lifetype = any other value -> Life means days of life
+ * 	Returned value: none
+ * 	Note:
+ *****************************************************************/
 function Euterpe_SetCookie(CookieName,CookieValue,Life,LifeType){
 	var Txt=CookieName+"="+CookieValue;
 	var L;
@@ -99,6 +162,14 @@ function Euterpe_SetCookie(CookieName,CookieValue,Life,LifeType){
 	document.cookie=Txt;
 }
 //-----------------------------------------------------------------
+/******************************************************************
+ * 	Euterpe_Element_Exist(ID) 
+ * 	Description: function verify if element with id=ID exists or not
+ * 	Parameters:
+ * 	+ID: the id you want to search
+ * 	Returned value: true if the id exists otherwise false
+ * 	Note: this function search between HTML id 
+ *****************************************************************/
 function Euterpe_Element_Exist(ID){
 	var Test=FindEuterpeElementFromID(ID);
 	if(Test==undefined)
@@ -106,6 +177,14 @@ function Euterpe_Element_Exist(ID){
 	return true;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ *	GetTxtMainObj(Obj)
+ * 	Description: OBSOLETE
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetTxtMainObj(Obj){
 	var Ele=Obj;
 	var UID=Ele.getAttribute("data-Euterpe_UID");
@@ -125,6 +204,16 @@ function GetTxtMainObj(Obj){
 	return FindEuterpeElement(UID);
 }
 //-----------------------------------------------------------------
+/******************************************************************
+ * 	GetEuterpeObjFromMsg(Msg) 
+ * 	Description: function process a message and search for the Euterpe 
+ * 		the send it
+ * 	Parameters:
+ * 	+Msg: the message to process 
+ * 	Returned value: the Euterpe element that send the message or undefined
+ * 	Note: this is a generic function that search in a message created from
+ * 		an user event (example of events may be onload, onmove, onmouseover...)
+ *****************************************************************/
 function GetEuterpeObjFromMsg(Msg){
 	var Ele;
 	Msg.target?Ele=Msg.target:Ele=Msg.srcElement;
@@ -155,6 +244,21 @@ function GetEuterpeObjFromMsg(Msg){
 	return Obj;
 }
 //-----------------------------------------------------------------
+/******************************************************************
+ *	ObjCoordinatesToScreen(Obj,x,y) 
+ * 	Description: converts the relative coordinates of an object to screen
+ * 		absolute coordinates
+ * 	Parameters:
+ * 	+Obj: the object you want to inspect
+ * 	+x: the horizontal coordinate
+ * 	+y: vertical coordinate
+ * 	Returned value: return an object Out -> 
+ * 		Out.x: absolute coordinate x
+ * 		Out.y: absolute coordinate y
+ * 	Note: suppose you want to have the screen absolute coordinates of the
+ * 		upper left corner (0,0) placed in screen at (100,10). The function
+ * 		will return (100,10)
+ *****************************************************************/
 function ObjCoordinatesToScreen(Obj,x,y){
 	var Out={};
 	var obj=Obj;
@@ -168,6 +272,20 @@ function ObjCoordinatesToScreen(Obj,x,y){
 	return Out;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ *	ScreenCoordinatesToObj(Obj,x,y)
+ * 	Description: converts screen absolute coordinates to object relative
+ * 	Parameters:
+ * 	+Obj: the object you want to inspect
+ * 	+x: horizontal coordinate
+ * 	+y: vertical coordinate
+ * 	Returned value: an object Out composed by Out.x and Out.y
+ * 		Out.x	->	x relative coordinate
+ * 		Out.y	->	y relative coordinate
+ * 	Note: suppose you want to define the screen absolute point (100,100)
+ * 		relative to object place absolute at (100, 50). Function will return
+ * 		Out.x = 0, Out.y = 50
+ *****************************************************************/
 function ScreenCoordinatesToObj(Obj,x,y){
 	var Tmp=ObjCoordinatesToScreen(Obj,0,0);
 	var Out={};
@@ -176,6 +294,13 @@ function ScreenCoordinatesToObj(Obj,x,y){
 	return Out;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetWindowHeight(){
 	var Br=GetBrowser();
 	switch(Br){
@@ -190,6 +315,13 @@ function GetWindowHeight(){
 		};
 	}
 }
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetWindowWidth(){
 	var Br=GetBrowser();
 	switch(Br){
@@ -205,12 +337,26 @@ function GetWindowWidth(){
 	}	
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetScrollX(){
 	if(window.scrollX!=undefined)
 		return window.scrollX;
 	else
 		return document.documentElement.scrollLeft;
 }
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetScrollY(){
 	if(window.scrollY!=undefined)
 		return window.scrollY;
@@ -218,6 +364,13 @@ function GetScrollY(){
 		return document.documentElement.scrollTop;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetDocumentWidth()
 {
 	if(document.body)
@@ -225,6 +378,13 @@ function GetDocumentWidth()
 	else
 		return 0;
 }
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetDocumentHeight()
 {
 	if(document.body)
@@ -232,6 +392,13 @@ function GetDocumentHeight()
 	return 0;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function Event_Mgr(Event_Str,Func,UID_Owner){
 	if(Event_Str!=undefined)
 		this.Event=Event_Str;
@@ -248,6 +415,13 @@ function Event_Mgr(Event_Str,Func,UID_Owner){
 	this.LastEvent=0;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function Timeout_Mgr(Handle,UID,Sender){
 	if(Handle)
 		this.Handle=Handle;
@@ -263,11 +437,25 @@ function Timeout_Mgr(Handle,UID,Sender){
 		this.Sender=null;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function Euterpe_Log(StringToLog){
 	if(window.console)
 		console.log(StringToLog);
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetEuterpePage(){
 	var Txt;
 	for(var a=0;a<EuterpeElementArray.length;a++)
@@ -282,6 +470,13 @@ function GetEuterpePage(){
 	return undefined;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetElementouterHTML(Element){
 	if(Element.outerHTML)
 		return Element.outerHTML;
@@ -289,6 +484,13 @@ function GetElementouterHTML(Element){
 		return new XMLSerializer().serializeToString(Element)
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function FindEuterpeElement(UID){
 	for(var a=0;a<EuterpeElementArray.length;a++)
 	{
@@ -298,6 +500,13 @@ function FindEuterpeElement(UID){
 	return undefined;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function FindEuterpeElementFromID(ID){
 	for(var a=0;a<EuterpeElementArray.length;a++)
 	{
@@ -307,6 +516,13 @@ function FindEuterpeElementFromID(ID){
 	return undefined;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetElementTextHeight(Element,Txt){
 	var Tmp=document.createElement("span");
 	Tmp.innerHTML=Txt;
@@ -319,6 +535,13 @@ function GetElementTextHeight(Element,Txt){
 	return Out;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetElementTextWidth(Element,Txt){
 	var Tmp=document.createElement("span");
 	Tmp.innerHTML=Txt;
@@ -331,6 +554,13 @@ function GetElementTextWidth(Element,Txt){
 	return Out;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetTextWithoutSpace(Txt){
 	var Out="";
 	if(Txt!=null && Txt!=undefined)
@@ -346,6 +576,13 @@ function GetTextWithoutSpace(Txt){
 	return Out;	
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function Find_Euterpe_UID(){
 	if(document.body!=null)
 	{
@@ -374,6 +611,13 @@ function Find_Euterpe_UID(){
 	return 0;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function Find_Element_By_EuterpeUID(Euterpe_UID){
 	var L=document.body.getElementsByTagName("*");
 	var Ele;
@@ -393,6 +637,13 @@ function Find_Element_By_EuterpeUID(Euterpe_UID){
 	return undefined;
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetBrowser(){
 	var Txt=navigator.userAgent;
 	if(Txt.indexOf("MSIE")!=-1)
@@ -421,6 +672,13 @@ function GetBrowser(){
 	}
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetBrowserVer(){
 	var Browser=GetBrowser();
 	var Txt=navigator.userAgent;
@@ -444,6 +702,13 @@ function GetBrowserVer(){
 	}
 }	
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function GetBrowserLanguage(){	
 	if(window.navigator.userLanguage)
 		return window.navigator.userLanguage;
@@ -451,6 +716,13 @@ function GetBrowserLanguage(){
 	return Txt.substring(0,2);
 }
 //-----------------------------------------------------------------
+/****************************************************************** 
+ * 	Description:
+ * 	Parameters:
+ * 	+Param1:
+ * 	Returned value:
+ * 	Note:
+ *****************************************************************/
 function EuterpeSetElementStyleProperty(Element,Property,Value){
 	var Orig;
 	var isIE=false;

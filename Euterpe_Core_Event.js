@@ -1,5 +1,16 @@
 var Euterpe_Undefined_EventMgr=-100;
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeResizeEvent
+*	Description: executed when an object is resized
+*	@param ObjResized: object resized (all value above in pixels)
+*	@param OldWidth: old width value 
+*	@param OldHeight: old height 
+*	@param NewWidth: new width
+*	@param NewHeight: new height
+*	@returns: value returned from executed function
+*	Note:
+********************************************************/
 function EuterpeResizeEvent(ObjResized, OldWidth, OldHeight, NewWidth, NewHeight){
 	var Msg={
 		type: "Euterpe_Resize",
@@ -12,12 +23,20 @@ function EuterpeResizeEvent(ObjResized, OldWidth, OldHeight, NewWidth, NewHeight
 		NewHeight: NewHeight,		
 		ObjResized: ObjResized		
 	};
-	if(ObjResize.EventMgr)
+	if(ObjResized.EventMgr)
 		return ObjResized.EventMgr(Msg);
 	else
 		return Euterpe_Undefined_EventMgr;
 }
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeCreateEvent
+*	Description: function/event executed when an object is created
+*	@param ObjCreated: new object created (an Euterpe object)
+*	@param Owner: owner of new object (Euterpe object)
+*	@returns: value returned from executed function
+*	Note:
+********************************************************/
 function EuterpeCreateEvent(ObjCreated,Owner){
 	var Msg={
 		type: "Euterpe_Create",
@@ -39,6 +58,17 @@ function EuterpeCreateEvent(ObjCreated,Owner){
 	}
 }
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeMoveEvent
+*	Description: function/event called when an object is moved
+*	@param ObjMoved: object moved (Euterpe object)
+*	@param OldTop: old top position
+*	@param OldLeft: old left position
+*	@param NewTop: new top
+*	@param NewLeft: new left
+*	@returns: value returned from executed function
+*	Note:
+********************************************************/
 function EuterpeMoveEvent(ObjMoved, OldTop, OldLeft, NewTop, NewLeft){
 	var Msg={
 		type: "Euterpe_Move",
@@ -57,6 +87,13 @@ function EuterpeMoveEvent(ObjMoved, OldTop, OldLeft, NewTop, NewLeft){
 		return Euterpe_Undefined_EventMgr;	
 }
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeShowEvent
+*	Description: function/event called when an object is showed
+*	@param ObjShowed: object showed (Euterpe object)
+*	@returns: value returned from executed function
+*	Note:
+********************************************************/
 function EuterpeShowEvent(ObjShowed){
 	var Msg={
 		type: "Euterpe_Show",
@@ -71,6 +108,13 @@ function EuterpeShowEvent(ObjShowed){
 		return Euterpe_Undefined_EventMgr;
 }
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeHideEvent
+*	Description: function/event called when an object is hidden
+*	@param ObjShowed: object hidden (Euterpe object)
+*	@returns: value returned from executed function
+*	Note:
+********************************************************/
 function EuterpeHideEvent(ObjShowed){
 	var Msg={
 		type: "Euterpe_Hide",
@@ -85,6 +129,15 @@ function EuterpeHideEvent(ObjShowed){
 		return Euterpe_Undefined_EventMgr;	
 }
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeChangeTextEvent
+*	Description: function/event generated when text of an object is changed
+*	@param ObjChanged: object change (Euterpe object)
+*	@param OldText: old text (as string)
+*	@param NewText: new text (as string)
+*	@returns: value returned from executed function
+*	Note:
+********************************************************/
 function EuterpeChangeTextEvent(ObjChanged,OldText,NewText){
 	var Msg={
 		type: "Euterpe_Chg_Text",
@@ -101,6 +154,16 @@ function EuterpeChangeTextEvent(ObjChanged,OldText,NewText){
 		return Euterpe_Undefined_EventMgr;	
 }
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeChangeClass
+*	Description: unction/event generated when class attribute of 
+*			an element is changed
+*	@param ObjChanged: object changed (Euterpe object)
+*	@param OldClass: old class (as string)
+*	@param NewClass: new class (as string)
+*	@returns: value returned from executed function
+*	Note:
+********************************************************/
 function EuterpeChangeClass(ObjChanged,OldClass, NewClass){
 	var Msg={
 		type: "Euterpe_Chg_Class",
@@ -117,6 +180,13 @@ function EuterpeChangeClass(ObjChanged,OldClass, NewClass){
 		return Euterpe_Undefined_EventMgr;	
 }
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeTabSelection
+*	Description: function/event called when a tab is changed
+*	@param SelectTab: new tab selected
+*	@returns: value returned from executed function
+*	Note:
+********************************************************/
 function EuterpeTabSelection(SelectTab){
 	var Msg={
 		type: "Euterpe_Sel_Tab",
@@ -138,6 +208,12 @@ function EuterpeTabSelection(SelectTab){
 	}
 }
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeTreeNodeExpanded
+*	Description: function/event called when a node is expanded
+*	@param TreeNode: node expanded
+*	Note:
+********************************************************/
 function EuterpeTreeNodeExpanded(TreeNode){
 	var Msg={
 		type: "Euterpe_TreeNode_Exp",
@@ -150,6 +226,12 @@ function EuterpeTreeNodeExpanded(TreeNode){
 	TreeNode.EventMgr(Msg);
 }
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeTreeNodeCollapsed
+*	Description: function/event called when a node is collapsed
+*	@param TreeNode: node collapsed
+*	Note:
+********************************************************/
 function EuterpeTreeNodeCollapsed(TreeNode){
 	var Msg={
 		type: "Euterpe_TreeNode_Col",
@@ -162,6 +244,14 @@ function EuterpeTreeNodeCollapsed(TreeNode){
 	TreeNode.EventMgr(Msg);
 }
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeFormInvalidated
+*	Description: function/event executed when user request validation
+*			of a form but this is incomplete
+*	@param EForm: form request to validate
+*	@param EElement: invalid elements
+*	Note:
+********************************************************/
 function EuterpeFormInvalidated(EForm,EElement){
 	var Msg={
 		type: "Euterpe_Form_Incomplete",
@@ -175,6 +265,13 @@ function EuterpeFormInvalidated(EForm,EElement){
 	EForm.EventMgr(Msg);
 }
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeFormValidated
+*	Description: function/event executed when user request validation
+*		of a form and this is complete
+*	@param EForm: form request to validate
+*	Note:
+********************************************************/
 function EuterpeFormValidated(EForm){
 	var Msg={
 		type: "Euterpe_Form_Complete",

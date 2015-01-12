@@ -284,3 +284,23 @@ function EuterpeFormValidated(EForm){
 	EForm.EventMgr(Msg);
 }
 //-----------------------------------------------------------------
+/********************************************************
+*	EuterpeChangeStyleProperty
+*	Description: function/event executed when user call SetStyleProperty
+*	@param ObjChanged: object that change property
+*	@param Property: property changed
+*	@param Value: new property value
+*	Note: update to issue #3
+********************************************************/
+function EuterpeChangeStylePropertyEvent(ObjChanged,Property,Value){
+	var Msg={
+			type: "Euterpe_Change_Style_Property",
+			eventPhase: 2,
+			target: ObjChanged.Element,
+			srcElement: ObjChanged.Element,
+			Property_Change: Property,
+			Value: Value
+	}
+	ObjChanged.EventMgr(Msg);
+}
+//-----------------------------------------------------------------

@@ -947,7 +947,7 @@ function Euterpe_Core_Obj(HTML_Tag){
 	this.SetStyleProperty=function(Property_Name, Property_Value){
 		if(this.Element){
 			EuterpeSetElementStyleProperty(this.Element,Property_Name,Property_Value);
-			EuterpeChangeStyleProperty(this,Property_Name,Property_Value);
+			EuterpeChangeStylePropertyEvent(this,Property_Name,Property_Value);
 		}
 	}
 	/****************************************************************** 

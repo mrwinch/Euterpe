@@ -1071,6 +1071,7 @@ function Euterpe_Core_Obj(HTML_Tag){
 				var Old=this.Element.className;
 				this.Element.className=Class_Name;
 				NormalClass=Class_Name;
+				this.SetAttribute("data-UserApplyClass","true");
 				EuterpeChangeClassEvent(this,Old,Class_Name);
 			}
 		}
@@ -1807,7 +1808,9 @@ function Euterpe_Core_Obj(HTML_Tag){
 					if(Type == null)
 						Type=E.ObjCreated.Element.getAttribute("data-Euterpe_Type");
 					var Base=Page.GetTheme();
-					if(Base!=undefined && Type!=null){
+					//this.SetAttribute("data-UserApplyClass","true");
+					var UserApply=E.ObjCreated.GetAttribute("data-UserApplyClass");
+					if(Base!=undefined && Type!=null && UserApply!="true"){
 						switch(Type){
 							case "Euterpe_Tab_Body":
 							case "Euterpe_Tab_Tab":{
@@ -1839,6 +1842,8 @@ function Euterpe_Core_Obj(HTML_Tag){
 							};
 						}
 					}
+					//if(UserApply!=null)
+						this.SetAttribute("data-UserApplyClass","false");
 				}
 			}
 		}

@@ -164,7 +164,7 @@ function EuterpeChangeTextEvent(ObjChanged,OldText,NewText){
 *	@returns: value returned from executed function
 *	Note:
 ********************************************************/
-function EuterpeChangeClass(ObjChanged,OldClass, NewClass){
+function EuterpeChangeClassEvent(ObjChanged,OldClass, NewClass){
 	var Msg={
 		type: "Euterpe_Chg_Class",
 		eventPhase: 2,
@@ -187,7 +187,7 @@ function EuterpeChangeClass(ObjChanged,OldClass, NewClass){
 *	@returns: value returned from executed function
 *	Note:
 ********************************************************/
-function EuterpeTabSelection(SelectTab){
+function EuterpeTabSelectionEvent(SelectTab){
 	var Msg={
 		type: "Euterpe_Sel_Tab",
 		eventPhase: 2,
@@ -214,7 +214,7 @@ function EuterpeTabSelection(SelectTab){
 *	@param TreeNode: node expanded
 *	Note:
 ********************************************************/
-function EuterpeTreeNodeExpanded(TreeNode){
+function EuterpeTreeNodeExpandedEvent(TreeNode){
 	var Msg={
 		type: "Euterpe_TreeNode_Exp",
 		eventPhase: 2,
@@ -232,7 +232,7 @@ function EuterpeTreeNodeExpanded(TreeNode){
 *	@param TreeNode: node collapsed
 *	Note:
 ********************************************************/
-function EuterpeTreeNodeCollapsed(TreeNode){
+function EuterpeTreeNodeCollapsedEvent(TreeNode){
 	var Msg={
 		type: "Euterpe_TreeNode_Col",
 		eventPhase: 2,
@@ -252,7 +252,7 @@ function EuterpeTreeNodeCollapsed(TreeNode){
 *	@param EElement: invalid elements
 *	Note:
 ********************************************************/
-function EuterpeFormInvalidated(EForm,EElement){
+function EuterpeFormInvalidatedEvent(EForm,EElement){
 	var Msg={
 		type: "Euterpe_Form_Incomplete",
 		eventPhase: 2,
@@ -272,7 +272,7 @@ function EuterpeFormInvalidated(EForm,EElement){
 *	@param EForm: form request to validate
 *	Note:
 ********************************************************/
-function EuterpeFormValidated(EForm){
+function EuterpeFormValidatedEvent(EForm){
 	var Msg={
 		type: "Euterpe_Form_Complete",
 		eventPhase: 2,

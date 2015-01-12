@@ -1071,7 +1071,7 @@ function Euterpe_Core_Obj(HTML_Tag){
 				var Old=this.Element.className;
 				this.Element.className=Class_Name;
 				NormalClass=Class_Name;
-				EuterpeChangeClass(this,Old,Class_Name);
+				EuterpeChangeClassEvent(this,Old,Class_Name);
 			}
 		}
 	}	
@@ -2652,7 +2652,7 @@ if(Euterpe_Align_Panel_Obj==undefined){
 					var Old=this.Element.className;
 					this.Element.className=Class_Name;
 					//NormalClass=Class_Name;
-					EuterpeChangeClass(this,Old,Class_Name);
+					EuterpeChangeClassEvent(this,Old,Class_Name);
 					this.Redraw();
 				}
 			}

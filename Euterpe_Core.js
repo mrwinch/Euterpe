@@ -1542,6 +1542,7 @@ function Euterpe_Core_Obj(HTML_Tag){
 	*	Note:
 	********************************************************/	
 	this.SetText=function(Text){
+		
 		this.BaseSetText(Text);
 	}	
 	/********************************************************
@@ -2481,6 +2482,20 @@ if(Euterpe_Panel_Obj==undefined){
 if(Euterpe_Align_Panel_Obj==undefined){
 	var Euterpe_Align_Panel_Obj=1;
 	/********************************************************
+	*	Euterpe_Align_Panel_Manager
+	*	Description: function to manage resize and class change events
+	*	@param Msg: message to analize
+	*	Note:
+	********************************************************/
+	function Euterpe_Align_Panel_Manager(Msg){
+		if(Msg.ObjChanged)
+			Msg.ObjChanged.Redraw();
+		else{
+			if(Msg.ObjResized)
+				Msg.ObjResized.Redraw();
+		}
+	}
+	/********************************************************
 	*	Euterpe_Align_Panel
 	*	Description: a more complex panel used to show and align
 	*		text vertically and horizontally
@@ -2517,6 +2532,8 @@ if(Euterpe_Align_Panel_Obj==undefined){
 				this.SetID(UID);
 			if(Class)
 				this.ApplyClass(Class);		
+			this.AddCustomEventMgr("Euterpe_Resize",Euterpe_Align_Panel_Manager);
+			this.AddCustomEventMgr("Euterpe_Chg_Class",Euterpe_Align_Panel_Manager);
 		}
 		/********************************************************
 		*	Redraw
@@ -2649,7 +2666,7 @@ if(Euterpe_Align_Panel_Obj==undefined){
 		*	Note: this function override Euterpe_Core_Obj function
 		*		because add Redraw()
 		********************************************************/		
-		this.ApplyClass=function(Class_Name){
+		/*this.ApplyClass=function(Class_Name){
 			if(this.Element!=null)
 			{
 				if(Class_Name!=undefined)
@@ -2661,14 +2678,14 @@ if(Euterpe_Align_Panel_Obj==undefined){
 					this.Redraw();
 				}
 			}
-		}
+		}*/
 		/********************************************************
 		*	SetHeight
 		*	Description: set height of the object (property height in style attribute)
 		*	@param Height_Str: new value of height
 		*	Note:
 		********************************************************/		
-		this.SetHeight=function(Height_Str){
+		/*this.SetHeight=function(Height_Str){
 			var W=this.GetWidth();
 			var H=this.GetHeight();	
 			if(this.Browser=="MSIE")
@@ -2676,14 +2693,14 @@ if(Euterpe_Align_Panel_Obj==undefined){
 			this.SetStyleProperty("height",Height_Str);
 			EuterpeResizeEvent(this,W,H,this.GetWidth(),this.GetHeight());
 			this.Redraw();
-		}
+		}*/
 		/********************************************************
 		*	SetWidth
 		*	Description: set width of the object (property width in style attribute)
 		*	@param Width_Str: new value of width
 		*	Note:
 		********************************************************/		
-		this.SetWidth=function(Width_Str){
+		/*this.SetWidth=function(Width_Str){
 			var W=this.GetWidth();
 			var H=this.GetHeight();
 			if(this.Browser=="MSIE")
@@ -2693,7 +2710,7 @@ if(Euterpe_Align_Panel_Obj==undefined){
 				EuterpeSetElementStyleProperty(this.TextElement,"width",Width_Str);		
 			EuterpeResizeEvent(this,W,H,this.GetWidth(),this.GetHeight());
 			this.Redraw();
-		}	
+		}	*/
 		this.Setup(Euterpe_Owner,ID,Class_Name);
 	}
 	Euterpe_Align_Panel.prototype=new Euterpe_Panel();

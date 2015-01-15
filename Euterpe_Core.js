@@ -531,6 +531,43 @@ function FindEuterpeObjectFromID(ID){
 }
 //-----------------------------------------------------------------
 /********************************************************
+*	EvaluateTextSize
+*	Description: evaluate size of a text inside an Euterpe object
+*	@param Element: javascript element connected to the object
+*	@param Txt: object to evaluate
+*	@param FixWidth (optional): insert if you want to render text
+*			with a fixed width
+*	@param FixHeight (optional): insert if you want to render text
+*			with a fixed height
+*	@returns: data as out.w (width) and out.h (height)
+*	Note:
+********************************************************/
+function EvaluateTextSize(Element,Txt,FixWidth,FixHeight){
+	var Out={w:0,h:0};
+	var Tmp=document.createElement("div");
+	Tmp.innerHTML=Txt;
+	if(Element){
+		var Orig=Element.getAttribute("style");
+		if(FixHeight)
+			EuterpeSetElementStyleProperty(Element,"height",FixHeight);
+		else
+			EuterpeSetElementStyleProperty(Element,"height","");
+		if(FixWidth)
+			EuterpeSetElementStyleProperty(Element,"width",FixWidth);
+		else
+			EuterpeSetElementStyleProperty(Element,"width","");
+		EuterpeSetElementStyleProperty(Element,"border","0px");
+		EuterpeSetElementStyleProperty(Element,"padding","0px");
+		Element.appendChild(Tmp);
+		Out.w=Tmp.offsetWidth;
+		Out.h=Tmp.offsetHeight;
+		Element.removeChild(Tmp);
+		Element.setAttribute("style",Orig);				
+	}
+	return Out;
+}
+//-----------------------------------------------------------------
+/********************************************************
 *	GetElementTextHeight
 *	Description: retrieve text height in pixel of the specified
 *				javascript element
@@ -540,17 +577,23 @@ function FindEuterpeObjectFromID(ID){
 *	Note: this function is usefull if you want to discovered height
 *		of a specified text in a particular element
 ********************************************************/
-function GetElementTextHeight(Element,Txt){
+/*function GetElementTextHeight(Element,Txt){
 	var Tmp=document.createElement("span");
 	Tmp.innerHTML=Txt;
 	var Out;
 	if(Element){
+		var Orig=Element.getAttribute("style");
+		EuterpeSetElementStyleProperty(Element,"height","");
+		EuterpeSetElementStyleProperty(Element,"width","");
+		EuterpeSetElementStyleProperty(Element,"border","0px");
+		EuterpeSetElementStyleProperty(Element,"padding","0px");
 		Element.appendChild(Tmp);
 		Out=Tmp.offsetHeight;
 		Element.removeChild(Tmp);
+		Element.setAttribute("style",Orig);		
 	}	
 	return Out;
-}
+}*/
 //-----------------------------------------------------------------
 /********************************************************
 *	GetElementTextWidth
@@ -562,17 +605,23 @@ function GetElementTextHeight(Element,Txt){
 *	Note:this function is usefull if you want to discovered width
 *		of a specified text in a particular element
 ********************************************************/
-function GetElementTextWidth(Element,Txt){
+/*function GetElementTextWidth(Element,Txt){
 	var Tmp=document.createElement("span");
-	Tmp.innerHTML=Txt;
+	Tmp.innerHTML=(Txt);
 	var Out;
 	if(Element){
+		var Orig=Element.getAttribute("style");
+		EuterpeSetElementStyleProperty(Element,"width","");
+		EuterpeSetElementStyleProperty(Element,"height","");		
+		EuterpeSetElementStyleProperty(Element,"border","0px");
+		EuterpeSetElementStyleProperty(Element,"padding","0px");
 		Element.appendChild(Tmp);
 		Out=Tmp.offsetWidth;
 		Element.removeChild(Tmp);
+		Element.setAttribute("style",Orig);
 	}
 	return Out;
-}
+}*/
 //-----------------------------------------------------------------
 /********************************************************
 *	GetTextWithoutSpace
@@ -1525,7 +1574,8 @@ function Euterpe_Core_Obj(HTML_Tag){
 				OldTxt=this.GetText();
 			if(this.TextElement==null || this.TextElement==undefined)
 			{
-				this.TextElement=document.createElement("span");
+				this.TextElement=document.createElement("div");
+				EuterpeSetElementStyleProperty(this.TextElement,"position","absolute");
 				this.Element.appendChild(this.TextElement);			
 			}
 			this.TextElement.innerHTML=Te;		
@@ -2423,7 +2473,7 @@ if(Euterpe_Panel_Obj==undefined){
 	*		+this.Setup
 	*		+this.BaseCreation
 	********************************************************/
-	function Euterpe_Panel(Euterpe_Owner,ID,Class_Name){	
+	function Euterpe_Panel(Euterpe_Owner,ID,Class_Name){
 		 /********************************* 
 		 * If you introduce a position relative, remember to add a "display:block"
 		 * otherwise size cannot be done
@@ -2437,7 +2487,7 @@ if(Euterpe_Panel_Obj==undefined){
 		*	Note: internal usage. DO NOT EXECUTE!!!
 		********************************************************/
 		this.Setup=function(Owner,UID,Class){
-			this.BaseCreation("span",Owner,"Euterpe_Panel");
+			this.BaseCreation("div",Owner,"Euterpe_Panel");
 			if(UID)
 				this.SetID(ID);
 			if(Class)
@@ -2516,6 +2566,7 @@ if(Euterpe_Align_Panel_Obj==undefined){
 	********************************************************/
 	function Euterpe_Align_Panel(Euterpe_Owner,ID,Class_Name){
 		this.LastAlign="top";
+		this.DrawingAllowed;		
 		/********************************************************
 		*	Setup
 		*	Description: setup function for panel
@@ -2525,7 +2576,8 @@ if(Euterpe_Align_Panel_Obj==undefined){
 		*	Note: internal usage. DO NOT EXECUTE!!!
 		********************************************************/		
 		this.Setup=function(Owner,UID,Class){
-			this.BaseCreation("span",Owner,"Euterpe_Align_Panel");
+			this.DrawingAllowed=true;			
+			this.BaseCreation("div",Owner,"Euterpe_Align_Panel");
 			this.SetAttribute("data-Euterpe_VAlign","top");
 			this.SetAttribute("data-Euterpe_HAlign","left");
 			if(UID)
@@ -2536,66 +2588,118 @@ if(Euterpe_Align_Panel_Obj==undefined){
 			this.AddCustomEventMgr("Euterpe_Chg_Class",Euterpe_Align_Panel_Manager);
 		}
 		/********************************************************
+		*	SetTextMode
+		*	Description: set the way text is rendered
+		*	@param Mode: one this value
+		*		-"AdjustObjSize": size of the object is adjust to
+		*							contain text (default)
+		*		-"IgnoreObjSize": text is rendered ignoring object size
+		*		-"IgnoreObjOverlapped": text that go outside object is not
+		*							rendered
+		*		-"AdjustTextToWidth": width of text is contain inside object width
+		*		-"AdjustTextToHeight": height of text is contain inside object height
+		*		-"AdjustWidthToText": width of object is set to contain text width
+		*		-"AdjustHeightToText": objects height is set to contain text height
+		*		-"TextEllipsed": if text width is bigger than object, last visible
+		*				characters in a line are "..."
+		*	Note:
+		********************************************************/		
+		this.SetTextMode=function(Mode){
+			this.SetAttribute("data-TextDrawMode",Mode);
+			this.Redraw();
+		}
+		/********************************************************
 		*	Redraw
 		*	Description: function to redraw panel 
 		*	Note: this function redraw the panel following parameter
 		*		so may be necessary after resizing or changing class
 		********************************************************/		
 		this.Redraw=function(){
-			var Align=this.GetAttribute("data-Euterpe_VAlign");
-			var Min;
-			if(Align==null)
-			{
-				Align="top";
-				this.SetAttribute("data-Euterpe_VAlign",Align);
-			}
-			if(this.TextElement!=null){
-				var Out="0px";
-				EuterpeSetElementStyleProperty(this.TextElement,"position","absolute");
-				var S=this.GetInnerHeight();
-				switch(Align){
-					case "top":{
-						Out="0px";
+			if(this.TextElement!=null && this.DrawingAllowed){
+				this.DrawingAllowed=false;				
+				var VAlign=this.GetAttribute("data-Euterpe_VAlign");
+				var HAlign=this.GetAttribute("data-Euterpe_HAlign");
+				var DrawStyle=this.GetAttribute("data-TextDrawMode");
+				var W=this.Element.offsetWidth;
+				var H=this.Element.offsetHeight;
+				var TextArea=EvaluateTextSize(this.Element,this.GetText());
+				//Euterpe_Log("Text: "+TextArea.w+","+TextArea.h+":"+W+","+H+"-"+this.GetText());
+				//Euterpe_Log("Area testo: "+TextArea.w+","+TextArea.h);
+				var Out;
+				//Euterpe_Log(DrawStyle);
+				switch(DrawStyle){
+					case "IgnoreObjSize":{
+						EuterpeSetElementStyleProperty(this.TextElement,"width",TextArea.w+"px");
+						EuterpeSetElementStyleProperty(this.TextElement,"height",TextArea.h+"px");
+						EuterpeSetElementStyleProperty(this.TextElement,"text-overflow","clip");
 					}break;
+					case "TextEllipsed":{
+						EuterpeSetElementStyleProperty(this.TextElement,"width",W+"px");
+						EuterpeSetElementStyleProperty(this.TextElement,"height",H+"px");
+						EuterpeSetElementStyleProperty(this.TextElement,"overflow","hidden");
+						EuterpeSetElementStyleProperty(this.TextElement,"text-overflow","ellipsis");
+						EuterpeSetElementStyleProperty(this.TextElement,"white-space","nowrap");						
+					}break;
+					case "IgnoreObjOverlapped":{
+						EuterpeSetElementStyleProperty(this.TextElement,"width",TextArea.w+"px");
+						EuterpeSetElementStyleProperty(this.TextElement,"height",TextArea.h+"px");
+						EuterpeSetElementStyleProperty(this.Element,"overflow","hidden");
+					}break;
+					case "AdjustTextToWidth":{
+						TextArea=EvaluateTextSize(this.Element,this.GetText(),W+"px");
+						EuterpeSetElementStyleProperty(this.TextElement,"height",TextArea.h+"px");
+					}break;
+					case "AdjustTextToHeight":{
+						TextArea=EvaluateTextSize(this.Element,this.GetText(),"",H+"px");
+						EuterpeSetElementStyleProperty(this.TextElement,"width",TextArea.w+"px");
+					}break;					
+					case "AdjustWidthToText":{
+						this.SetWidth(TextArea.w+"px");
+						W=TextArea.w;
+						EuterpeSetElementStyleProperty(this.TextElement,"width",TextArea.w+"px");
+						EuterpeSetElementStyleProperty(this.TextElement,"height",TextArea.h+"px");						
+					}break;					
+					case "AdjustHeightToText":{
+						this.SetHeight(TextArea.h+"px");
+						H=TextArea.h;
+						EuterpeSetElementStyleProperty(this.TextElement,"width",TextArea.w+"px");
+						EuterpeSetElementStyleProperty(this.TextElement,"height",TextArea.h+"px");						
+					}break;										
+					default:{
+						this.SetWidth(TextArea.w+"px");
+						this.SetHeight(TextArea.h+"px");
+						W=TextArea.w;
+						H=TextArea.h;
+					};
+				}
+				switch(VAlign){
 					case "middle":{
-						var T=this.TextElement.offsetHeight;
-						Out=((S-T)/2)+"px";
+						Out=(H-TextArea.h)/2;
 					}break;
 					case "bottom":{
-						var T=this.TextElement.offsetHeight;
-						Out=(S-T)+"px";				
+						Out=(H-TextArea.h);
 					}break;
 					default:{
-						Out=Align;
+						Out=0;
 					};
-				}
-				EuterpeSetElementStyleProperty(this.TextElement,"top",Out);
-			}
-			Align=this.GetAttribute("data-Euterpe_HAlign");
-			if(Align==null)
-			{
-				Align="left";
-				this.SetAttribute("data-Euterpe_HAlign",Align);
-			}
-			if(this.TextElement!=null){
-				if(this.GetInnerWidth())
-					EuterpeSetElementStyleProperty(this.TextElement,"width",(this.GetInnerWidth()-this.GetPadding("left")-
-															this.GetPadding("right"))+"px");
-				switch(Align){
-					case "left":{
-						EuterpeSetElementStyleProperty(this.TextElement,"text-align","left");
-					}break;
+				}						
+				EuterpeSetElementStyleProperty(this.TextElement,"top",Out+"px");
+				EuterpeSetElementStyleProperty(this.TextElement,"text-align",HAlign);
+				switch(HAlign){
 					case "center":{
-						EuterpeSetElementStyleProperty(this.TextElement,"text-align","center");
+						Out=(W-TextArea.w)/2;
+						Euterpe_Log("Info:"+W+","+TextArea.w+","+Out);
 					}break;
 					case "right":{
-						EuterpeSetElementStyleProperty(this.TextElement,"text-align","right");			
+						Out=(W-TextArea.w);
 					}break;
 					default:{
-						EuterpeSetElementStyleProperty(this.TextElement,"left",Align);
-					};
+						Out=0;
+					}break;
 				}
-			}	
+				EuterpeSetElementStyleProperty(this.TextElement,"left",Out+"px");
+				this.DrawingAllowed=true;
+			}			
 		}
 		/********************************************************
 		*	SetText
@@ -2644,6 +2748,8 @@ if(Euterpe_Align_Panel_Obj==undefined){
 		********************************************************/			
 		this.SetHAlign=function(Align){
 			this.SetAttribute("data-Euterpe_HAlign",Align);
+			//if(this.TextElement)
+			//	EuterpeSetElementStyleProperty(this.TextElement,"text-align",Align);
 			this.Redraw();	
 		}
 		/********************************************************

@@ -155,7 +155,7 @@ function EuterpeChangeTextEvent(ObjChanged,OldText,NewText){
 }
 //-----------------------------------------------------------------
 /********************************************************
-*	EuterpeChangeClass
+*	EuterpeChangeClassEvent
 *	Description: unction/event generated when class attribute of 
 *			an element is changed
 *	@param ObjChanged: object changed (Euterpe object)
@@ -181,7 +181,7 @@ function EuterpeChangeClassEvent(ObjChanged,OldClass, NewClass){
 }
 //-----------------------------------------------------------------
 /********************************************************
-*	EuterpeTabSelection
+*	EuterpeTabSelectionEvent
 *	Description: function/event called when a tab is changed
 *	@param SelectTab: new tab selected
 *	@returns: value returned from executed function
@@ -209,7 +209,7 @@ function EuterpeTabSelectionEvent(SelectTab){
 }
 //-----------------------------------------------------------------
 /********************************************************
-*	EuterpeTreeNodeExpanded
+*	EuterpeTreeNodeExpandedEvent
 *	Description: function/event called when a node is expanded
 *	@param TreeNode: node expanded
 *	Note:
@@ -227,7 +227,7 @@ function EuterpeTreeNodeExpandedEvent(TreeNode){
 }
 //-----------------------------------------------------------------
 /********************************************************
-*	EuterpeTreeNodeCollapsed
+*	EuterpeTreeNodeCollapsedEvent
 *	Description: function/event called when a node is collapsed
 *	@param TreeNode: node collapsed
 *	Note:
@@ -245,7 +245,7 @@ function EuterpeTreeNodeCollapsedEvent(TreeNode){
 }
 //-----------------------------------------------------------------
 /********************************************************
-*	EuterpeFormInvalidated
+*	EuterpeFormInvalidatedEvent
 *	Description: function/event executed when user request validation
 *			of a form but this is incomplete
 *	@param EForm: form request to validate
@@ -266,7 +266,7 @@ function EuterpeFormInvalidatedEvent(EForm,EElement){
 }
 //-----------------------------------------------------------------
 /********************************************************
-*	EuterpeFormValidated
+*	EuterpeFormValidatedEvent
 *	Description: function/event executed when user request validation
 *		of a form and this is complete
 *	@param EForm: form request to validate
@@ -285,7 +285,7 @@ function EuterpeFormValidatedEvent(EForm){
 }
 //-----------------------------------------------------------------
 /********************************************************
-*	EuterpeChangeStyleProperty
+*	EuterpeChangeStylePropertyEvent
 *	Description: function/event executed when user call SetStyleProperty
 *	@param ObjChanged: object that change property
 *	@param Property: property changed

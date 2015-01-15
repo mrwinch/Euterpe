@@ -568,62 +568,6 @@ function EvaluateTextSize(Element,Txt,FixWidth,FixHeight){
 }
 //-----------------------------------------------------------------
 /********************************************************
-*	GetElementTextHeight
-*	Description: retrieve text height in pixel of the specified
-*				javascript element
-*	@param Element: javascript element to analize
-*	@param Txt: the string text you want to measure
-*	@returns: height in pixel of the text
-*	Note: this function is usefull if you want to discovered height
-*		of a specified text in a particular element
-********************************************************/
-/*function GetElementTextHeight(Element,Txt){
-	var Tmp=document.createElement("span");
-	Tmp.innerHTML=Txt;
-	var Out;
-	if(Element){
-		var Orig=Element.getAttribute("style");
-		EuterpeSetElementStyleProperty(Element,"height","");
-		EuterpeSetElementStyleProperty(Element,"width","");
-		EuterpeSetElementStyleProperty(Element,"border","0px");
-		EuterpeSetElementStyleProperty(Element,"padding","0px");
-		Element.appendChild(Tmp);
-		Out=Tmp.offsetHeight;
-		Element.removeChild(Tmp);
-		Element.setAttribute("style",Orig);		
-	}	
-	return Out;
-}*/
-//-----------------------------------------------------------------
-/********************************************************
-*	GetElementTextWidth
-*	Description: retrieve text width in pixel of the specified
-*				javascript element
-*	@param Element: javascript element to analize
-*	@param Txt: the string text you want to measure
-*	@returns: width in pixel of the text
-*	Note:this function is usefull if you want to discovered width
-*		of a specified text in a particular element
-********************************************************/
-/*function GetElementTextWidth(Element,Txt){
-	var Tmp=document.createElement("span");
-	Tmp.innerHTML=(Txt);
-	var Out;
-	if(Element){
-		var Orig=Element.getAttribute("style");
-		EuterpeSetElementStyleProperty(Element,"width","");
-		EuterpeSetElementStyleProperty(Element,"height","");		
-		EuterpeSetElementStyleProperty(Element,"border","0px");
-		EuterpeSetElementStyleProperty(Element,"padding","0px");
-		Element.appendChild(Tmp);
-		Out=Tmp.offsetWidth;
-		Element.removeChild(Tmp);
-		Element.setAttribute("style",Orig);
-	}
-	return Out;
-}*/
-//-----------------------------------------------------------------
-/********************************************************
 *	GetTextWithoutSpace
 *	Description: return a string without spaces
 *	@param Txt: string you want to modify
@@ -1854,12 +1798,10 @@ function Euterpe_Core_Obj(HTML_Tag){
 			{
 				if(E.ObjCreated.Element!=undefined)
 				{
-					//var Type=E.ObjCreated.Element.getAttribute("data-Euterpe_Type");
 					var Type=E.ObjCreated.Element.getAttribute("data-ThemeType");
 					if(Type == null)
 						Type=E.ObjCreated.Element.getAttribute("data-Euterpe_Type");
 					var Base=Page.GetTheme();
-					//this.SetAttribute("data-UserApplyClass","true");
 					var UserApply=E.ObjCreated.GetAttribute("data-UserApplyClass");
 					if(Base!=undefined && Type!=null && UserApply!="true"){
 						switch(Type){
@@ -2623,10 +2565,7 @@ if(Euterpe_Align_Panel_Obj==undefined){
 				var W=this.Element.offsetWidth;
 				var H=this.Element.offsetHeight;
 				var TextArea=EvaluateTextSize(this.Element,this.GetText());
-				//Euterpe_Log("Text: "+TextArea.w+","+TextArea.h+":"+W+","+H+"-"+this.GetText());
-				//Euterpe_Log("Area testo: "+TextArea.w+","+TextArea.h);
 				var Out;
-				//Euterpe_Log(DrawStyle);
 				switch(DrawStyle){
 					case "IgnoreObjSize":{
 						EuterpeSetElementStyleProperty(this.TextElement,"width",TextArea.w+"px");
@@ -2688,7 +2627,6 @@ if(Euterpe_Align_Panel_Obj==undefined){
 				switch(HAlign){
 					case "center":{
 						Out=(W-TextArea.w)/2;
-						Euterpe_Log("Info:"+W+","+TextArea.w+","+Out);
 					}break;
 					case "right":{
 						Out=(W-TextArea.w);
@@ -2748,8 +2686,6 @@ if(Euterpe_Align_Panel_Obj==undefined){
 		********************************************************/			
 		this.SetHAlign=function(Align){
 			this.SetAttribute("data-Euterpe_HAlign",Align);
-			//if(this.TextElement)
-			//	EuterpeSetElementStyleProperty(this.TextElement,"text-align",Align);
 			this.Redraw();	
 		}
 		/********************************************************
@@ -2758,65 +2694,12 @@ if(Euterpe_Align_Panel_Obj==undefined){
 		*	Note: OBSOLETE 
 		********************************************************/			
 		this.Show=function(){
-			//this.SetVAlign(this.LastAlign);	
 			this.SetStyleProperty("visibility","visible");		
 			this.ShowChild();
 			var D=new Date();
 			this.LastShowTime=D.getTime();		
 			EuterpeShowEvent(this);				
 		}
-		/********************************************************
-		*	ApplyClass
-		*	Description: apply a class to element connected 
-		*	@param Class_Name: name of the class to apply
-		*	Note: this function override Euterpe_Core_Obj function
-		*		because add Redraw()
-		********************************************************/		
-		/*this.ApplyClass=function(Class_Name){
-			if(this.Element!=null)
-			{
-				if(Class_Name!=undefined)
-				{
-					var Old=this.Element.className;
-					this.Element.className=Class_Name;
-					//NormalClass=Class_Name;
-					EuterpeChangeClassEvent(this,Old,Class_Name);
-					this.Redraw();
-				}
-			}
-		}*/
-		/********************************************************
-		*	SetHeight
-		*	Description: set height of the object (property height in style attribute)
-		*	@param Height_Str: new value of height
-		*	Note:
-		********************************************************/		
-		/*this.SetHeight=function(Height_Str){
-			var W=this.GetWidth();
-			var H=this.GetHeight();	
-			if(this.Browser=="MSIE")
-				this.SetStyleProperty("height","");
-			this.SetStyleProperty("height",Height_Str);
-			EuterpeResizeEvent(this,W,H,this.GetWidth(),this.GetHeight());
-			this.Redraw();
-		}*/
-		/********************************************************
-		*	SetWidth
-		*	Description: set width of the object (property width in style attribute)
-		*	@param Width_Str: new value of width
-		*	Note:
-		********************************************************/		
-		/*this.SetWidth=function(Width_Str){
-			var W=this.GetWidth();
-			var H=this.GetHeight();
-			if(this.Browser=="MSIE")
-				this.SetStyleProperty("width","");
-			this.SetStyleProperty("width",Width_Str);
-			if(this.TextElement)
-				EuterpeSetElementStyleProperty(this.TextElement,"width",Width_Str);		
-			EuterpeResizeEvent(this,W,H,this.GetWidth(),this.GetHeight());
-			this.Redraw();
-		}	*/
 		this.Setup(Euterpe_Owner,ID,Class_Name);
 	}
 	Euterpe_Align_Panel.prototype=new Euterpe_Panel();

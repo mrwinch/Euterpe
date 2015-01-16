@@ -1703,15 +1703,23 @@ function Euterpe_Core_Obj(HTML_Tag){
 				if(E.type){
 					if(E.type.indexOf("Euterpe")!=-1){
 						if(E.type==EL[a].Event){
-							var O=EL[a].Func(E);
-							if(O)
-								return O;
+							if(E.eventPhase && E.eventPhase==2){
+								var O=EL[a].Func(E);
+								if(O)
+									return O;
+							}
+							//else
+							//	Euterpe_Log("Evento: "+E.type+" - Phase: "+E.eventPhase+" - "+A);	
 						}
 					}
 					else
 					{
-						if(E.type==EL[a].Event)
-							EL[a].Func(E);
+						if(E.eventPhase && E.eventPhase==2){
+							if(E.type==EL[a].Event)
+								EL[a].Func(E);
+						}
+						//else
+						//	Euterpe_Log("Evento: "+E.type+" - Phase: "+E.eventPhase+" - "+A);
 					}
 				}
 			}
@@ -2646,8 +2654,10 @@ if(Euterpe_Align_Panel_Obj==undefined){
 		*	Note:
 		********************************************************/		
 		this.SetText=function(Text){
-			if(this.GetWidth()==0)
-				this.SetWidth((GetElementTextWidth(this.Element,Text)+8)+"px");
+			if(this.GetWidth()==0){
+				var TextArea=EvaluateTextSize(this.Element,this.GetText());
+				this.SetWidth(TextArea.w+"px");
+			}
 			this.BaseSetText(Text);
 			this.Redraw();
 			this.MakeUnselectable();

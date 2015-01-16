@@ -1015,7 +1015,7 @@ function Euterpe_Core_Obj(HTML_Tag){
 		this.SetStyleProperty("z-index",0);
 		//this.AddCustomEventMgr("Euterpe_Create",this.AutoApplyClass);
 		this.AddCustomEventMgr("Euterpe_Create",ThemeTypeApplication);
-		if(this.Element.addEventListener)
+		/*if(this.Element.addEventListener)
 		{
 			this.Element.addEventListener("mouseover",MouseOver,false);
 			this.Element.addEventListener("mousemove",MouseMove,false);
@@ -1026,7 +1026,7 @@ function Euterpe_Core_Obj(HTML_Tag){
 			this.Element.attachEvent("onmouseover",MouseOver);		
 			this.Element.attachEvent("onmousemove",MouseMove);
 			this.Element.attachEvent("onclick",MouseGenericClick);
-		}
+		}*/
 		SelfObj=this;
 		return this.Element;
 	}
@@ -1868,11 +1868,11 @@ function Euterpe_Core_Obj(HTML_Tag){
 	*	@param E: message sent from mouseover event
 	*	Note: used only in object creation
 	********************************************************/	
-	MouseOver=function(E){
+	/*MouseOver=function(E){
 		var Obj=GetEuterpeObjFromMsg(E);
 		var Page=GetEuterpePage();
 		Page.ObjUnderMouse=Obj;
-	}
+	}*/
 	/********************************************************
 	*	MouseMove
 	*	Description: function used by Euterpe_Page to manage
@@ -1880,11 +1880,11 @@ function Euterpe_Core_Obj(HTML_Tag){
 	*	@param E: message sent from mousemove event
 	*	Note: used only in object creation
 	********************************************************/	
-	MouseMove=function(E){
+	/*MouseMove=function(E){
 		var Page=GetEuterpePage();
 		Page.mouseX=E.clientX;
 		Page.mouseY=E.clientY;
-	}
+	}*/
 	/********************************************************
 	*	MouseGenericClick
 	*	Description: function used by Euterpe_Page to manage
@@ -1892,7 +1892,7 @@ function Euterpe_Core_Obj(HTML_Tag){
 	*	@param E: message sent from mouseclick event
 	*	Note: used only in object creation
 	********************************************************/	
-	MouseGenericClick=function(E){
+	/*MouseGenericClick=function(E){
 		var Src=GetEuterpeObjFromMsg(E);
 		if(Src!=undefined)
 		{
@@ -1926,7 +1926,7 @@ function Euterpe_Core_Obj(HTML_Tag){
 				};
 			}
 		}
-	}	
+	}*/	
 	/********************************************************
 	*	GetType
 	*	Description: return type of Euterpe object
@@ -2201,6 +2201,13 @@ function Euterpe_Core_Obj(HTML_Tag){
 	}
 }
 //-----------------------------------------------------------------
+function EuterpeMouseMoveHandler(Msg){
+	var Page=GetEuterpePage();
+	Page.mouseX=Msg.clientX;
+	Page.mouseY=Msg.clientY;
+	var Obj=GetEuterpeObjFromMsg(Msg);
+	Page.ObjUnderMouse=Obj;	
+}
 /********************************************************
 *	Euterpe_Page
 *	Description: first and main Euterpe object
@@ -2339,6 +2346,14 @@ if(Euterpe_Page_Obj==undefined){
 			EuterpeCreateEvent(this);
 			if(ID)
 				this.SetID(ID);
+			if(document.addEventListener){
+				document.addEventListener("mousemove",EuterpeMouseMoveHandler);
+			}
+			else{
+				if(document.attachEvent){
+					document.attachEvent("onmousemove",EuterpeMouseMoveHandler);
+				}
+			}
 		}
 		/********************************************************
 		*	WindowListener

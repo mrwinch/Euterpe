@@ -24,20 +24,13 @@ if(Euterpe_Button_Obj==undefined){
 		*	@param Class: class to apply (if any)
 		*	Note: internal usage. DO NOT EXECUTE!!!
 		********************************************************/
-		this.Setup=function(Owner,UID,Class){
-			this.BaseCreation("a",Owner,"Euterpe_Align_Panel");
+		this.Setup=function(Owner,Id,Class){
+			this.BaseCreation("a",Owner,"Euterpe_Button");
 			this.SetAttribute("href","#");
 			this.SetStyleProperty("text-decoration","none");
-			this.SetAttribute("data-Euterpe_Type","Euterpe_Button");
 			this.SetCursor("pointer");
 			this.SetText("Button");
-			EuterpeCreateEvent(this,Owner);
-			if(UID)
-				this.SetID(UID);
-			if(Class)
-				this.ApplyClass(Class);		
-			this.AddCustomEventMgr("Euterpe_Chg_Class",Euterpe_Align_Panel_Manager);
-			this.AddCustomEventMgr("Euterpe_Resize",Euterpe_Align_Panel_Manager);
+			this.SecondStageCreation(Id,Class);
 		}
 		/********************************************************
 		*	Redraw
@@ -79,8 +72,8 @@ if(Euterpe_Button_Obj==undefined){
 				this.SetWidth(TextArea.w+"px");				
 			}
 			this.BaseSetText(Text);
-			this.Redraw();
-			this.MakeUnselectable();	
+			//this.Redraw();
+			//this.MakeUnselectable();	
 		}
 		/********************************************************
 		*	SetCursor
@@ -101,7 +94,7 @@ if(Euterpe_Button_Obj==undefined){
 		*	Note:
 		********************************************************/		
 		this.SetClickFunction=function(Function){
-			this.AddEventMgr("click",Function);	
+			this.AddEventMgr("mouseup",Function);	
 		}	
 		this.Setup(Euterpe_Owner,ID,Class_Name);
 	}

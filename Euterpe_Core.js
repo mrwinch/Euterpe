@@ -558,8 +558,10 @@ function EvaluateTextSize(Element,Txt,FixWidth,FixHeight){
 			EuterpeSetElementStyleProperty(Element,"width","");
 		EuterpeSetElementStyleProperty(Element,"border","0px");
 		EuterpeSetElementStyleProperty(Element,"padding","0px");
+		if(GetBrowser()!="MSIE")
+			EuterpeSetElementStyleProperty(Element,"position","fixed");
 		Element.appendChild(Tmp);
-		Out.w=Tmp.offsetWidth;
+		Out.w=Tmp.clientWidth;
 		Out.h=Tmp.offsetHeight;
 		Element.removeChild(Tmp);
 		Element.setAttribute("style",Orig);				
@@ -1013,20 +1015,7 @@ function Euterpe_Core_Obj(HTML_Tag){
 		this.Show();
 		EuterpeObjectArray.push(this);
 		this.SetStyleProperty("z-index",0);
-		//this.AddCustomEventMgr("Euterpe_Create",this.AutoApplyClass);
 		this.AddCustomEventMgr("Euterpe_Create",ThemeTypeApplication);
-		/*if(this.Element.addEventListener)
-		{
-			this.Element.addEventListener("mouseover",MouseOver,false);
-			this.Element.addEventListener("mousemove",MouseMove,false);
-			this.Element.addEventListener("click",MouseGenericClick,false);
-		}
-		else
-		{
-			this.Element.attachEvent("onmouseover",MouseOver);		
-			this.Element.attachEvent("onmousemove",MouseMove);
-			this.Element.attachEvent("onclick",MouseGenericClick);
-		}*/
 		SelfObj=this;
 		return this.Element;
 	}
@@ -1038,7 +1027,8 @@ function Euterpe_Core_Obj(HTML_Tag){
 	 * 	Note:
 	 *****************************************************************/	
 	this.GetInnerHeight=function(){
-		return this.GetHeight()-this.GetBorderSize("bottom")-this.GetBorderSize("top");
+		return this.GetHeight()-this.GetBorderSize("bottom")-this.GetBorderSize("top")-
+			this.GetPadding("bottom")-this.GetPadding("top");
 	}
 	/****************************************************************** 
 	 * 	GetInnerWidth
@@ -1048,7 +1038,8 @@ function Euterpe_Core_Obj(HTML_Tag){
 	 * 	Note:
 	 *****************************************************************/	
 	this.GetInnerWidth=function(){
-		return this.GetWidth()-this.GetBorderSize("left")-this.GetBorderSize("right");
+		return this.GetWidth()-this.GetBorderSize("left")-this.GetBorderSize("right")-
+					this.GetPadding("left")-this.GetPadding("right");
 	}
 	/********************************************************
 	*	ApplyClass
@@ -1215,7 +1206,8 @@ function Euterpe_Core_Obj(HTML_Tag){
 	this.SetWidth=function(Width_Str){
 		var W=this.GetWidth();
 		var H=this.GetHeight();
-		if(this.Browser=="MSIE")this.SetStyleProperty("width","");
+		if(this.Browser=="MSIE")
+			this.SetStyleProperty("width","");
 		var Check = this.GetAttribute("data-ObjMinWidth");
 		if(Check!=null){
 			if(PixelTxtToNumber(Check)<PixelTxtToNumber(Width_Str))
@@ -1536,7 +1528,6 @@ function Euterpe_Core_Obj(HTML_Tag){
 	*	Note:
 	********************************************************/	
 	this.SetText=function(Text){
-		
 		this.BaseSetText(Text);
 	}	
 	/********************************************************
@@ -2338,7 +2329,6 @@ if(Euterpe_Page_Obj==undefined){
 				//if(this.BrowserVer==6)
 					this.SetStyleProperty("overflow","hidden");
 			}		
-			//Theme="Default";
 			CSSActive=false;
 			CSSHover=true;
 			Self=this;
@@ -2416,6 +2406,14 @@ if(Euterpe_Page_Obj==undefined){
 		********************************************************/		
 		this.GetTheme=function(){
 			return Theme;
+		}	
+		/********************************************************
+		*	Redraw
+		*	Description: compatibility function
+		*	Note: DO NOT USE
+		********************************************************/		
+		this.Redraw=function(){
+			
 		}
 		this.Setup(Page_ID);		
 	}
@@ -2425,6 +2423,14 @@ if(Euterpe_Page_Obj==undefined){
 //-----------------------------------------------------------------
 if(Euterpe_Panel_Obj==undefined){
 	var Euterpe_Panel_Obj=1;
+	function Euterpe_Visual_Obj_Msg_Manager(Msg){
+		if(Msg.ObjChanged)
+			Msg.ObjChanged.Redraw();
+		else{
+			if(Msg.ObjResized)
+				Msg.ObjResized.Redraw();
+		}		
+	}
 	/********************************************************
 	*	Euterpe_Panel
 	*	Description: first usable object, a panel
@@ -2453,10 +2459,7 @@ if(Euterpe_Panel_Obj==undefined){
 		********************************************************/
 		this.Setup=function(Owner,UID,Class){
 			this.BaseCreation("div",Owner,"Euterpe_Panel");
-			if(UID)
-				this.SetID(ID);
-			if(Class)
-				this.ApplyClass(Class);
+			this.SecondStageCreation(UID,Class);
 		}
 		/********************************************************
 		*	BaseCreation
@@ -2488,6 +2491,31 @@ if(Euterpe_Panel_Obj==undefined){
 			this.CheckBorder();	
 			EuterpeCreateEvent(this,Own);
 		}
+		/********************************************************
+		*	Redraw
+		*	Description: redraw objects following objects details
+		*	Note: to implement in descendant objects
+		********************************************************/		
+		this.Redraw=function(){
+			
+		}
+		/********************************************************
+		*	SecondStageCreation
+		*	Description: additional function executed when object is created
+		*	@param UID: id to apply to connected element
+		*	@param Class: class to apply at the object
+		*	Note:
+		********************************************************/		
+		this.SecondStageCreation=function(UID,Class){
+			if(UID)
+				this.SetID(UID);
+			if(Class)
+				this.ApplyClass(Class);		
+			this.AddCustomEventMgr("Euterpe_Resize",Euterpe_Visual_Obj_Msg_Manager);
+			this.AddCustomEventMgr("Euterpe_Chg_Class",Euterpe_Visual_Obj_Msg_Manager);			
+			this.AddCustomEventMgr("Euterpe_Chg_Text",Euterpe_Visual_Obj_Msg_Manager);//Euterpe_Change_Style_Property
+			this.AddCustomEventMgr("Euterpe_Change_Style_Property",Euterpe_Visual_Obj_Msg_Manager);			
+		}
 		this.Setup(Euterpe_Owner,ID,Class_Name);
 	}
 	Euterpe_Panel.prototype=new Euterpe_Core_Obj;
@@ -2502,14 +2530,14 @@ if(Euterpe_Align_Panel_Obj==undefined){
 	*	@param Msg: message to analize
 	*	Note:
 	********************************************************/
-	function Euterpe_Align_Panel_Manager(Msg){
+	/*function Euterpe_Align_Panel_Manager(Msg){
 		if(Msg.ObjChanged)
 			Msg.ObjChanged.Redraw();
 		else{
 			if(Msg.ObjResized)
 				Msg.ObjResized.Redraw();
 		}
-	}
+	}*/
 	/********************************************************
 	*	Euterpe_Align_Panel
 	*	Description: a more complex panel used to show and align
@@ -2545,12 +2573,7 @@ if(Euterpe_Align_Panel_Obj==undefined){
 			this.BaseCreation("div",Owner,"Euterpe_Align_Panel");
 			this.SetAttribute("data-Euterpe_VAlign","top");
 			this.SetAttribute("data-Euterpe_HAlign","left");
-			if(UID)
-				this.SetID(UID);
-			if(Class)
-				this.ApplyClass(Class);		
-			this.AddCustomEventMgr("Euterpe_Resize",Euterpe_Align_Panel_Manager);
-			this.AddCustomEventMgr("Euterpe_Chg_Class",Euterpe_Align_Panel_Manager);
+			this.SecondStageCreation(UID,Class);
 		}
 		/********************************************************
 		*	SetTextMode
@@ -2674,8 +2697,8 @@ if(Euterpe_Align_Panel_Obj==undefined){
 				this.SetWidth(TextArea.w+"px");
 			}
 			this.BaseSetText(Text);
-			this.Redraw();
-			this.MakeUnselectable();
+			//this.Redraw();
+			//this.MakeUnselectable();
 		}
 		/********************************************************
 		*	SetCursor

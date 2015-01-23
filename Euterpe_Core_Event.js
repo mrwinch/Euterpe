@@ -123,7 +123,7 @@ function EuterpeHideEvent(ObjShowed){
 		srcElement: ObjShowed.Element,	
 		ObjShowed: ObjShowed		
 	};
-	if(ObjShowedEventMgr)
+	if(ObjShowed.EventMgr)
 		return ObjShowed.EventMgr(Msg);
 	else
 		return Euterpe_Undefined_EventMgr;	

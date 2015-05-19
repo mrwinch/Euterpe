@@ -1,4 +1,9 @@
 //-----------------------------------------------------------------
+/*
+ * + Rewritten Destroy()
+ * 
+ */
+//-----------------------------------------------------------------
 /****************************************************************** 
  * 	Description:
  * 	Parameters:
@@ -1804,15 +1809,15 @@ function Euterpe_Core_Obj(HTML_Tag){
 					var UserApply=E.ObjCreated.GetAttribute("data-UserApplyClass");
 					if(Base!=undefined && Type!=null && UserApply!="true"){
 						switch(Type){
-							case "Euterpe_Tab_Body":
+							/*case "Euterpe_Tab_Body":
 							case "Euterpe_Tab_Tab":{
 							
-							}break;
-							case "Euterpe_Dialog":{
+							}break;*/
+							/*case "Euterpe_Dialog":{
 								E.ObjCreated.ApplyClass(Base+"_"+Type);
 								E.ObjCreated.Title.ApplyClass(Base+"_"+Type+"_Title");
-							}break;
-							case "Euterpe_Tab":{
+							}break;*/
+							/*case "Euterpe_Tab":{
 								if(!E.ObjCreated.isHorizontal())
 								{
 									E.ObjCreated.ApplySelectedClass(Base+"_"+"Euterpe_Tab_Tab_Active",Base+"_"+"Euterpe_Tab_Body_Active");
@@ -1824,11 +1829,11 @@ function Euterpe_Core_Obj(HTML_Tag){
 									E.ObjCreated.ApplyDeselectedClass(Base+"_"+"Euterpe_Tab_HorzTab_Inactive",Base+"_"+"Euterpe_Tab_Body_Inactive");
 								}
 								E.ObjCreated.ApplyClass(Base+"_"+Type);
-							}break;
-							case "Euterpe_TreeNode":{
+							}break;*/
+							/*case "Euterpe_TreeNode":{
 								E.ObjCreated.ApplyBtnClass(Base+"_"+"Euterpe_TreeNode_Btn");
 								E.ObjCreated.ApplyTextClass(Base+"_"+"Euterpe_TreeNode");
-							}break;
+							}break;*/
 							default:{
 								E.ObjCreated.ApplyClass(Base+"_"+Type);
 							};
@@ -1934,12 +1939,27 @@ function Euterpe_Core_Obj(HTML_Tag){
 	*	Note:
 	********************************************************/
 	this.Destroy=function(){
-		while(this.Element.hasChildNodes())
-			this.Element.removeChild(this.Element.firstChild);
-		if(this.Dad!=undefined &&this.Dad!=null)
+		//for(var a=0;a<)
+		var List=this.GetEuterpeChild();
+		for(var a=0;a<List.length;a++)
+			List[a].Destroy();
+		var ID=this.GetUID();
+		for(var a=0;a<EuterpeObjectArray.length;a++){
+			if(EuterpeObjectArray[a].GetUID()==ID){
+				EuterpeObjectArray.splice(a,1);
+				a=EuterpeObjectArray.length;
+			}
+		}
+		if(this.Dad!=undefined && this.Dad!=null)
 			this.Dad.Element.removeChild(this.Element);
 		else
 			document.body.removeChild(this.Element);
+		/*while(this.Element.hasChildNodes())
+			this.Element.removeChild(this.Element.firstChild);
+		if(this.Dad!=undefined && this.Dad!=null)
+			this.Dad.Element.removeChild(this.Element);
+		else
+			document.body.removeChild(this.Element);*/
 	}
 	/********************************************************
 	*	ParentAlignTop

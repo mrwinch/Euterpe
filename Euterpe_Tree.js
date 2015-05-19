@@ -50,7 +50,7 @@ function TreeNodeClicked(Msg){
 			var T=Node.GetType();
 			if(T=="Euterpe_Align_Panel")
 				Node=Node.Dad;
-			Euterpe_Log("Tip:"+Node.GetText());
+			//Euterpe_Log("Tip:"+Node.GetText());
 			if(Node.isCollapsed())
 				Node.Expand();
 			else
